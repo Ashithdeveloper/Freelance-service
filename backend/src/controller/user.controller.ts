@@ -20,9 +20,10 @@ export const Login = async (req: Request, res: Response) => {
       password === process.env.SuperAdminPassword
     ) {
       const adminToken = generateToken(username);
+      const user = { role : "superadmin" , username : username };
       return res
         .status(200)
-        .json({ token: adminToken, message: "Super Admin Login Successful" , role:"superadmin" });
+        .json({ token: adminToken, message: "Super Admin Login Successful" ,  user });
     }
 
     //  Normal User Login
