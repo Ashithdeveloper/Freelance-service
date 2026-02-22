@@ -23,22 +23,24 @@ const { user } = useAuthStore((state) => state);
         path="/*"
         element={
           <ProtectedRoute>
-            <div className="flex w-full min-h-screen">
+            <div className="flex h-screen overflow-hidden">
               <SideBar role={user.role} />
-              <div className="flex-1 p-8 text-gray-600 text-base">
-                <Routes>
-                  <Route path="/" element={<WebContent />} />
-                  {user.role === "superadmin" && (
-                    <Route path="/managers" element={<Manager />} />
-                  )}
-                  <Route path="/projects" element={<Projects />} />
-                  <Route path="/services" element={<Service/>} />
-                  <Route path="/contact" element={<Contact/>} />
-                  <Route
-                    path="/*"
-                    element={<div className="text-4xl">404</div>}
-                  />
-                </Routes>
+              <div className="flex-1 md:ml-64 overflow-y-auto bg-gray-50 pt-16 md:pt-0">
+                <div className="p-6 md:p-8">
+                  <Routes>
+                    <Route path="/" element={<WebContent />} />
+                    {user.role === "superadmin" && (
+                      <Route path="/managers" element={<Manager />} />
+                    )}
+                    <Route path="/projects" element={<Projects />} />
+                    <Route path="/services" element={<Service />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route
+                      path="/*"
+                      element={<div className="text-4xl">404</div>}
+                    />
+                  </Routes>
+                </div>
               </div>
             </div>
           </ProtectedRoute>

@@ -20,7 +20,6 @@
           required: true,
         },
       ],
-
       liveLink: String,
       githubLink: String,
 
