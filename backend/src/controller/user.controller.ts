@@ -54,6 +54,7 @@ export const createManager = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     if(!username || !password){
+        console.log("Please enter username and password");
         return res.status(400).json({ message: "Please enter username and password" });
     }
     const existingUser = await userModel.findOne({ username });

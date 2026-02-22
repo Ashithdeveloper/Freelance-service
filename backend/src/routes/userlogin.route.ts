@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/login", Login)
 router.post("/createManager",authMiddleware ,createManager)
-router.post("/listmanagers",authMiddleware ,listManager)
+router.get("/listmanagers",authMiddleware ,listManager)
 
 
 export default router
