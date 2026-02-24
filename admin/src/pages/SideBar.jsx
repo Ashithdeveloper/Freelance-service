@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import useAuthStore from "../../Zustand/user.store";
 
 const SideBar = ({ role }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuthStore((state) => state);
+
+  const handleLogout = () => {
+    logout();
+    
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -29,7 +37,7 @@ const SideBar = ({ role }) => {
           fixed top-0 left-0 z-50
           w-64 h-screen
           bg-black text-white
-          flex flex-col border-r
+          flex flex-col
           transform transition-transform duration-300
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0 md:flex
@@ -37,16 +45,17 @@ const SideBar = ({ role }) => {
       >
         {/* Header */}
         <div className="p-6 border-b border-gray-800 flex justify-between items-center">
-          <h1 className="text-xl font-bold tracking-wide">Admin Panel</h1>
+          <h1 className="text-xl font-bold tracking-wide">
+            {role?.toUpperCase()}
+          </h1>
 
-          {/* Close button (mobile only) */}
           <button className="md:hidden" onClick={() => setIsOpen(false)}>
             <X size={22} />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-col gap-2 p-6 text-sm font-medium">
+        <nav className="flex flex-col gap-2 p-6 text-sm font-medium flex-1">
           <NavItem to="/" label="WebContent" close={() => setIsOpen(false)} />
           <NavItem
             to="/services"
@@ -72,6 +81,16 @@ const SideBar = ({ role }) => {
             />
           )}
         </nav>
+
+        {/* Logout */}
+        <div className="p-6 border-t border-gray-800">
+          <button
+            onClick={handleLogout}
+            className="w-full text-left px-4 py-2 rounded-lg text-gray-400 hover:bg-red-600 hover:text-white transition"
+          >
+            Logout
+          </button>
+        </div>
       </aside>
     </>
   );

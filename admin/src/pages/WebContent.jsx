@@ -15,7 +15,7 @@ const WebContent = () => {
     const imageUrl = URL.createObjectURL(file);
     setPreview(imageUrl);
   };
-
+  console.log(image);
   // Remove Image
   const handleRemoveImage = () => {
     setImage(null);

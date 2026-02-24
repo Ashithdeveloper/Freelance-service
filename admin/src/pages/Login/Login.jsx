@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import userLogin from '../../../APIs/user';
 import useAuthStore from '../../../Zustand/user.store';
+import { Navigate } from 'react-router-dom';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -17,7 +18,6 @@ const Login = () => {
             console.log(res);
             useAuthStore.setState({ user: res.user, token: res.token });
             setLoginLoading(false);
-            
         } catch (error) {
             console.log(error);
             setLoginLoading(false);
