@@ -50,6 +50,7 @@ export const createWebContent = async (req: Request, res: Response) => {
 export const getWebContent = async (req: Request, res: Response) => {
     try {
         const webContent = await WebContent.findOne().populate("contactSection").populate("serviceSection").populate("projectSection");
+        if(!webContent) return res.status(404).json({message: "Web content not found" , firstTime : true});
         return res.status(200).json({webContent , message: "Web content fetched successfully"});
     } catch (error) {
         console.log(error);

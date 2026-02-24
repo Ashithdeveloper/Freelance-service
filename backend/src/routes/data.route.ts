@@ -7,6 +7,8 @@ const router = express.Router()
 
 // create data
 router.post("/create",authMiddleware ,createWebContent)
+//get all data
+router.post("/getall",authMiddleware ,getWebContent)
 //updateContact
 router.put("/updateContact/:id",authMiddleware ,updateContact)
 //updateService 

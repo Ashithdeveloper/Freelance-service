@@ -1,7 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, use } from "react";
 
 const WebContent = () => {
+
   const [image, setImage] = useState(null);
+  const [ title , setTitle] = useState("");
+  const [ aboutDescription , setAboutDescription] = useState("");
+  const [ aboutTitle , setAboutTitle] = useState("");
+
   const [preview, setPreview] = useState("");
   const fileInputRef = useRef(null);
 
@@ -26,6 +31,11 @@ const WebContent = () => {
     }
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log(title,aboutDescription,aboutTitle,image);
+
+  };
   return (
     <div className="min-h-screen bg-gray-100 p-6 md:p-10">
       <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-8 md:p-10 space-y-8">
@@ -46,6 +56,7 @@ const WebContent = () => {
               <input
                 type="text"
                 placeholder="Enter hero title"
+                onChange={(e)=>setTitle(e.target.value)}
                 className="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-black outline-none"
               />
             </div>
@@ -106,6 +117,7 @@ const WebContent = () => {
             <input
               type="text"
               placeholder="Enter about title"
+              onChange={(e)=>setAboutTitle(e.target.value)}
               className="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-black outline-none"
             />
           </div>
@@ -117,14 +129,15 @@ const WebContent = () => {
             <textarea
               rows="4"
               placeholder="Enter about content"
+              onChange={(e)=>setAboutDescription(e.target.value)}
               className="w-full border rounded-xl px-4 py-2 focus:ring-2 focus:ring-black outline-none resize-none"
             />
           </div>
         </div>
 
         {/* SAVE BUTTON */}
-        <div className="pt-6 border-t">
-          <button className="bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition font-medium">
+        <div className="pt-6 border-t" onClick={onSubmit}>
+          <button className={`${ title === '' || aboutTitle === '' || aboutDescription === '' && "bg-green-400"} bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition font-medium`}>
             Save Web Content
           </button>
         </div>

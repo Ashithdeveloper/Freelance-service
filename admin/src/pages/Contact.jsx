@@ -83,6 +83,7 @@ const Contact = () => {
     e.preventDefault();
     console.log("Contact Data:", formData);
     // 👉 Call your API here
+    
   };
 
   return (
