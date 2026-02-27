@@ -1,8 +1,8 @@
 const webData = {
   heroSection: [
     {
-      content: "I Build Modern Web & Mobile Applications",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f",
+      content: "We Build Modern Web & Mobile Applications",
+      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c",
     },
   ],
 
@@ -69,11 +69,11 @@ const webData = {
       description:
         "Modern online shopping platform with admin dashboard, order tracking, payment gateway and analytics.",
       techStack: ["React", "Node", "MongoDB", "JWT"],
-      images: ["https://images.unsplash.com/photo-1556742049-0cfed4f6a45d"],
+      images: ["https://miro.medium.com/1*VNoETQG1aBwujmj9qMBbLQ.png"],
       liveLink: "#",
       githubLink: "#",
       isActive: true,
-      amount: 75000,
+      amount: 25000,
       type: "ecommerce",
     },
 
@@ -83,11 +83,13 @@ const webData = {
       description:
         "Complete ERP system for schools including student management, attendance tracking, exam reports and admin control.",
       techStack: ["React", "Express", "MongoDB"],
-      images: ["https://images.unsplash.com/photo-1588072432836-e10032774350"],
+      images: [
+        "https://mir-s3-cdn-cf.behance.net/projects/404/31e824134274771.Y3JvcCwxMzA5LDEwMjQsODcsMA.jpg",
+      ],
       liveLink: "#",
       githubLink: "#",
       isActive: true,
-      amount: 80000,
+      amount: 30000,
       type: "erp",
     },
 
@@ -97,11 +99,13 @@ const webData = {
       description:
         "Web-based hospital system with patient records, doctor scheduling, billing and analytics dashboard.",
       techStack: ["React", "Node", "MongoDB"],
-      images: ["https://images.unsplash.com/photo-1581091012184-5c1d2a7b6c6a"],
+      images: [
+        "https://www.mephics.co.tz/images/uploads/hospital_management_system_hms_dashboard.png",
+      ],
       liveLink: "#",
       githubLink: "#",
       isActive: true,
-      amount: 90000,
+      amount: 40000,
       type: "healthcare",
     },
 
@@ -111,11 +115,13 @@ const webData = {
       description:
         "Online food ordering web app with menu management, live order tracking and admin dashboard.",
       techStack: ["React", "Node", "MongoDB"],
-      images: ["https://images.unsplash.com/photo-1555992336-03a23c4a4f1f"],
+      images: [
+        "https://trufflesystems.io/wp-content/uploads/truffle-pos_online-ordering_pos_kds.png",
+      ],
       liveLink: "#",
       githubLink: "#",
       isActive: true,
-      amount: 60000,
+      amount: 30000,
       type: "restaurant",
     },
 
@@ -125,11 +131,13 @@ const webData = {
       description:
         "Multi-user SaaS application with subscription plans, payment integration and role-based access.",
       techStack: ["React", "Node", "Stripe"],
-      images: ["https://images.unsplash.com/photo-1461749280684-dccba630e2f6"],
+      images: [
+        "https://icubetechnolabs.com/wp-content/uploads/2025/03/icube-blogs-1.png",
+      ],
       liveLink: "#",
       githubLink: "#",
       isActive: true,
-      amount: 95000,
+      amount: 15000,
       type: "saas",
     },
 
@@ -139,7 +147,9 @@ const webData = {
       description:
         "Property listing web application with search filters, admin approval system and user authentication.",
       techStack: ["React", "Node", "MongoDB"],
-      images: ["https://images.unsplash.com/photo-1560518883-ce09059eeffa"],
+      images: [
+        "https://cdn.dribbble.com/userupload/31833259/file/original-6fcdf371f24c05beed22572ba3e74375.png?format=webp&resize=400x300&vertical=center",
+      ],
       liveLink: "#",
       githubLink: "#",
       isActive: true,
@@ -151,7 +161,7 @@ const webData = {
       _id: "7",
       title: "Custom CRM System",
       description:
-        "Business CRM system with sales tracking, lead management and reporting dashboard.",
+        "Business CRM system with sales tracking, lead management and reporting dashboard with AI integration.",
       techStack: ["React", "Node", "MongoDB"],
       images: ["https://images.unsplash.com/photo-1551288049-bebda4e38f71"],
       liveLink: "#",
@@ -167,24 +177,26 @@ const webData = {
       description:
         "Secure backend system powering a mobile application with authentication, notifications and data sync.",
       techStack: ["Node", "MongoDB", "Firebase"],
-      images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c"],
+      images: [
+        "https://cdn.dribbble.com/userupload/11363173/file/original-4cdec4411c881f750b6911b86183834f.png?resize=400x0",
+      ],
       liveLink: "#",
       githubLink: "#",
       isActive: true,
-      amount: 55000,
+      amount: 25000,
       type: "mobile",
     },
   ],
 
   contact: {
-    phoneNumbers: [{ label: "Freelance", number: "+91 9876543210" }],
-    emails: [{ label: "Business", email: "ashithdev@example.com" }],
-    address: "Neyyattinkara, Kerala, India",
+    phoneNumbers: [{ label: "Freelance", number: "+91 6379351328" }],
+    emails: [{ label: "Business", email: "ashithashith593@gmail.com" }],
+    address: " kanniyakumari tamil nadu, India",
     socialMedia: {
-      instagram: "#",
-      linkedin: "#",
+      instagram: "https://www.instagram.com/a4_tech_sentinels",
+      linkedin: "linkedin.com/in/ashith-s-f-141612359",
       twitter: "#",
-      github: "#",
+      github: "https://github.com/Ashithdeveloper",
     },
   },
 };
