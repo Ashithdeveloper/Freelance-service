@@ -1,8 +1,10 @@
+import hero from "../assets/hero.jpg";
+
 const webData = {
   heroSection: [
     {
       content: "We Build Modern Web & Mobile Applications",
-      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c",
+      image: hero,
     },
   ],
 

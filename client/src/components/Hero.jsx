@@ -1,6 +1,7 @@
 import webData from "../Data/webData";
 import { ArrowRight } from "lucide-react";
 
+
 const Hero = () => {
   const hero = webData?.heroSection?.[0];
 
