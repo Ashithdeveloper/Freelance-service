@@ -1,8 +1,37 @@
+import { useState } from "react";
 import webData from "../Data/webData";
 import { Phone, Mail, MapPin, Github, Linkedin, Instagram } from "lucide-react";
 
 const Contact = () => {
   const contact = webData.contact;
+  const [ isLoading, setIsLoading ] = useState(false);
+
+    const onSubmit = async (event) => {
+
+    event.preventDefault();
+    setIsLoading(true);
+    
+    const formData = new FormData(event.target);
+
+    formData.append("access_key", "dee85f43-227d-4443-8121-e695d48e8858");
+
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+  
+      event.target.reset();
+      setIsLoading(false);
+    } else {
+      console.log("Error", data);
+      setIsLoading(false);
+
+    }
+  };
 
   return (
     <section id="contact" className="py-20 bg-gray-900 text-white">
@@ -66,7 +95,7 @@ const Contact = () => {
 
           {/* Right Side - Contact Form */}
           <div className="bg-gray-800 p-8 rounded-2xl shadow-lg">
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={onSubmit}>
               <div>
                 <input
                   type="text"
@@ -95,7 +124,7 @@ const Contact = () => {
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 transition py-3 rounded-lg font-semibold"
               >
-                Send Message
+                {isLoading ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>
