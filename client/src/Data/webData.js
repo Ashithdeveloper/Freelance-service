@@ -68,7 +68,7 @@ const webData = {
       title: "Advanced E-Commerce Application",
       description:
         "Modern online shopping platform with admin dashboard, order tracking, payment gateway and analytics.",
-      techStack: ["React", "Node", "MongoDB", "JWT"],
+      techStack: ["MERN stack", "Next js", "React Native"],
       images: ["https://miro.medium.com/1*VNoETQG1aBwujmj9qMBbLQ.png"],
       liveLink: "#",
       githubLink: "#",
@@ -82,7 +82,7 @@ const webData = {
       title: "School Management System",
       description:
         "Complete ERP system for schools including student management, attendance tracking, exam reports and admin control.",
-      techStack: ["React", "Express", "MongoDB"],
+      techStack: ["MERN stack", "Next js", "React Native"],
       images: [
         "https://mir-s3-cdn-cf.behance.net/projects/404/31e824134274771.Y3JvcCwxMzA5LDEwMjQsODcsMA.jpg",
       ],
@@ -98,7 +98,7 @@ const webData = {
       title: "Hospital Management Dashboard",
       description:
         "Web-based hospital system with patient records, doctor scheduling, billing and analytics dashboard.",
-      techStack: ["React", "Node", "MongoDB"],
+      techStack: ["MERN stack", "Next js", "React Native"],
       images: [
         "https://www.mephics.co.tz/images/uploads/hospital_management_system_hms_dashboard.png",
       ],
@@ -114,7 +114,7 @@ const webData = {
       title: "Restaurant Ordering System",
       description:
         "Online food ordering web app with menu management, live order tracking and admin dashboard.",
-      techStack: ["React", "Node", "MongoDB"],
+      techStack: ["MERN stack", "Next js", "React Native"],
       images: [
         "https://trufflesystems.io/wp-content/uploads/truffle-pos_online-ordering_pos_kds.png",
       ],
@@ -130,7 +130,7 @@ const webData = {
       title: "SaaS Subscription Platform",
       description:
         "Multi-user SaaS application with subscription plans, payment integration and role-based access.",
-      techStack: ["React", "Node", "Stripe"],
+      techStack: ["MERN stack", "Next js", "React Native"],
       images: [
         "https://icubetechnolabs.com/wp-content/uploads/2025/03/icube-blogs-1.png",
       ],
@@ -146,7 +146,7 @@ const webData = {
       title: "Real Estate Property Platform",
       description:
         "Property listing web application with search filters, admin approval system and user authentication.",
-      techStack: ["React", "Node", "MongoDB"],
+      techStack: ["MERN stack", "Next js", "React Native"],
       images: [
         "https://cdn.dribbble.com/userupload/31833259/file/original-6fcdf371f24c05beed22572ba3e74375.png?format=webp&resize=400x300&vertical=center",
       ],
@@ -162,7 +162,7 @@ const webData = {
       title: "Custom CRM System",
       description:
         "Business CRM system with sales tracking, lead management and reporting dashboard with AI integration.",
-      techStack: ["React", "Node", "MongoDB"],
+      techStack: ["MERN stack", "Next js", "React Native", "AI integration"],
       images: ["https://images.unsplash.com/photo-1551288049-bebda4e38f71"],
       liveLink: "#",
       githubLink: "#",
@@ -176,7 +176,7 @@ const webData = {
       title: "Mobile App Backend API",
       description:
         "Secure backend system powering a mobile application with authentication, notifications and data sync.",
-      techStack: ["Node", "MongoDB", "Firebase"],
+      techStack: ["MERN stack", "Next js", "React Native"],
       images: [
         "https://cdn.dribbble.com/userupload/11363173/file/original-4cdec4411c881f750b6911b86183834f.png?resize=400x0",
       ],
