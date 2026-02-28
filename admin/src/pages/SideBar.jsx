@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import useAuthStore from "../../Zustand/user.store";
 
-const SideBar = ({ role , first }) => {
+const SideBar = ({ role  }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuthStore((state) => state);
 
@@ -80,13 +80,7 @@ const SideBar = ({ role , first }) => {
               close={() => setIsOpen(false)}
             />
           )}
-          {!first && (
-            <button
-              className={` ${!first && "bg-green-600"} w-full text-left px-4 py-2 rounded-lg text-gray-400 hover:text-white transition`}
-            >
-              first startup
-            </button>
-          )}
+          
         </nav>
 
         {/* Logout */}

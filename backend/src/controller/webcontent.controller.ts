@@ -3,6 +3,7 @@ import WebContent from "../models/webContent";
 import WebContact from "../models/contactsection";
 import Service from "../models/serviceAvailable";
 import ProjectPhoto from "../models/projectPhoto";
+import { deleteFromCloudinary } from "../utils/cloudinaryDelete";
 
 
 // export const createWebContent = async (req: Request, res: Response) => {
@@ -48,21 +49,29 @@ import ProjectPhoto from "../models/projectPhoto";
 // };
 
 export const getWebContent = async (req: Request, res: Response) => {
-    try {
-        const webContent = await WebContent.findOne()
-        const webContact = await WebContact.findOne()
-        const services = await Service.find()
-        const projects = await ProjectPhoto.find()
+  try {
+  const [webContent, webContact, services, projects] = await Promise.all([
+    WebContent.findOne().lean(),
+    WebContact.findOne().lean(),
+    Service.find().lean(),
+    ProjectPhoto.find().lean(),
+  ]);
 
-        if(!webContent || !webContact || !services || !projects) return res.status(404).json({message: "Web content not found" });
-        return res.status(200).json({webContent , webContact, services, projects, message: "Web content fetched successfully"});
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: "Internal Server Error" });
-    }
+    
+    return res.status(200).json({
+      webContent,
+      webContact,
+      services: services || [],
+      projects: projects || [],
+      message: "Web content fetched successfully",
+    });
+  } catch (error) {
+    console.error("Get Web Content Error:", error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
 };
-
 // update the web contact 
 
 export const updateContact = async (req: Request, res: Response) => {
@@ -157,10 +166,45 @@ export const deleteService = async (req: Request, res: Response) => {
 
 export const addProject = async (req: Request, res: Response) => {
   try {
-    const project = req.body;
-    if(!project) return res.status(400).json({message: "Project is required"});
+     const {
+       title,
+       description,
+       techStack,
+       images,
+       liveLink,
+       githubLink,
+       amount,
+       isActive,
+     } = req.body;
 
-    const createProject = await ProjectPhoto.create(project);
+     // Parse techStack back to array
+       const parsedTechStack = Array.isArray(techStack)
+         ? techStack
+         : typeof techStack === "string"
+           ? techStack.split(",").map((tech) => tech.trim())
+           : [];
+
+      const parsedImages = Array.isArray(images)
+        ? images
+        : images
+          ? [images]
+          : [];
+
+
+    if(!title || !description || !parsedTechStack || !isActive || !images) return res.status(400).json({message: "Project is required"});
+
+    const createProject = await ProjectPhoto.create(
+      {
+        title,
+        description,
+        techStack: parsedTechStack,
+        liveLink,
+        images : parsedImages,
+        githubLink,
+        amount,
+        isActive,
+      },
+    );
 
     if (!createProject) {
       return res.status(404).json({ message: "Project not found" });
@@ -168,7 +212,7 @@ export const addProject = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       message: "Project added successfully",
-      project,
+      createProject,
     });
   } catch (error) {
     console.log(error);
@@ -182,10 +226,26 @@ export const deleteProject = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    // remove reference from WebContent
-    await WebContent.findOneAndUpdate({}, { $pull: { projectSection: id } });
+    if (!id) {
+      return res.status(400).json({ message: "Project ID is required" });
+    }
+    
 
-    await ProjectPhoto.findByIdAndDelete(id);
+    const existingProject = await ProjectPhoto.findById(id);
+
+    if (!existingProject) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+
+    if (existingProject.images.length > 0) {
+      await Promise.all(
+        existingProject.images.map((img: any) =>
+          deleteFromCloudinary(img.public_id),
+        ),
+      );
+    }
+
+    const project = await ProjectPhoto.findByIdAndDelete(id);
 
     return res.status(200).json({
       message: "Project deleted successfully",
@@ -201,18 +261,60 @@ export const deleteProject = async (req: Request, res: Response) => {
 export const updateProject = async ( req: Request, res: Response) => {
   try {
     const { id } = req.params;
-
-    const project = req.body;
-    if(!project) return res.status(400).json({message: "Project is required"});
-
-    const updatedProject = await ProjectPhoto.findByIdAndUpdate(id, project,  {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!updatedProject) {
-      return res.status(404).json({ message: "Project not found" });
+    if (!id) {
+      return res.status(400).json({ message: "Project ID is required" });
     }
+      const {
+        title,
+        description,
+        techStack,
+        images,
+        liveLink,
+        githubLink,
+        amount,
+        isActive,
+      } = req.body;
+
+      const existingProject = await ProjectPhoto.findById(id);
+      if (!existingProject) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      if (existingProject.images.length > 0) {
+        await Promise.all(
+        existingProject.images.map((img: any) =>
+        deleteFromCloudinary(img.public_id),
+      ),
+    );
+  }
+        const parsedTechStack = Array.isArray(techStack)
+          ? techStack
+          : typeof techStack === "string"
+            ? techStack.split(",").map((tech: string) => tech.trim())
+            : [];
+
+        // ✅ Normalize images
+        const parsedImages = Array.isArray(images)
+          ? images
+          : images
+            ? [images]
+            : [];
+
+      const updateData: any = {};
+
+      if (title) updateData.title = title;
+      if (description) updateData.description = description;
+      if (techStack) updateData.techStack = parsedTechStack;
+      if (images) updateData.images = parsedImages;
+      if (liveLink) updateData.liveLink = liveLink;
+      if (githubLink) updateData.githubLink = githubLink;
+      if (amount) updateData.amount = amount;
+      if (typeof isActive === "boolean") updateData.isActive = isActive;
+
+      const updatedProject = await ProjectPhoto.findByIdAndUpdate(
+        id,
+        updateData,
+        { new: true },
+      );
 
     return res.status(200).json({
       message: "Project updated successfully",

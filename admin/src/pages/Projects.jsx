@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import axiosInstance from "../../axois";
+import { uploadToCloudinary } from "../service/imageservice";
+import ProjectViews from "../Components/projectViews";
 
 const Projects = () => {
   const [formData, setFormData] = useState({
@@ -37,31 +40,35 @@ const handleImageChange = (e) => {
 
   setPreviewImages((prev) => [...prev, ...newPreviews]);
 };
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const formDataToSend = new FormData();
-
-    formDataToSend.append("title", formData.title);
-    formDataToSend.append("description", formData.description);
-    formDataToSend.append(
-      "techStack",
-      JSON.stringify(formData.techStack.split(",").map((tech) => tech.trim())),
+  try {
+    // Upload all images first
+    const imageUrls = await Promise.all(
+      formData.images.map((file) =>
+        uploadToCloudinary(file),
+      ),
     );
-    formDataToSend.append("liveLink", formData.liveLink);
-    formDataToSend.append("githubLink", formData.githubLink);
-    formDataToSend.append("amount", formData.amount);
-    formDataToSend.append("isActive", formData.isActive);
 
-    // append multiple images
-    formData.images.forEach((file) => {
-      formDataToSend.append("images", file);
-    });
+    const dataToSend = {
+      title: formData.title,
+      description: formData.description,
+      techStack: formData.techStack.split(",").map((tech) => tech.trim()),
+      liveLink: formData.liveLink,
+      githubLink: formData.githubLink,
+      amount: formData.amount,
+      isActive: formData.isActive,
+      images: imageUrls, 
+    };
 
-    console.log("Ready to send:", formDataToSend);
+    const res = await axiosInstance.post("/addProject", dataToSend);
 
-    // 🔥 axios.post("/api/projects", formDataToSend)
-  };
+    console.log("Success:", res.data);
+  } catch (error) {
+    console.log("Upload error:", error);
+  }
+};
 
   const handleRemoveImage = (index) => {
     setFormData((prev) => ({
@@ -241,6 +248,9 @@ const handleImageChange = (e) => {
             Save Project
           </button>
         </form>
+      </div>
+      <div className="mt-4">
+        <ProjectViews/>
       </div>
     </div>
   );

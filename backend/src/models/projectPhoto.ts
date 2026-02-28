@@ -16,8 +16,8 @@
 
       images: [
         {
-          type: String, // image URL
-          required: true,
+          url: { type: String },
+          public_id: { type: String },
         },
       ],
       liveLink: String,

@@ -9,26 +9,34 @@ import Projects from "./pages/Projects";
 import Service from "./pages/Service";
 import Contact from "./pages/Contact";
 import WebContent from "./pages/WebContent";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import axiosInstance from "../axois";
+import useDataStore from "../Zustand/datahandle";
 
 
 function App() {
   
 const { user } = useAuthStore((state) => state);
-const [first, setFirst] = useState(true);
+const { setProjects, setService, setWebcontent, setWebContact } = useDataStore();
+
+
 
 useEffect(() => {
   const getall = async () => {
     try {
-      const res = await axiosInstance.post("/getall");
-      console.log(res);
-
+     const res = await axiosInstance.get("/getall");
+     console.log("res", res.data);
+     console.log("Setting projects:", res.data.projects);
+      setProjects(res.data.projects);
+      setService(res.data.services);
+      setWebcontent(res.data.webContent);
+      setWebContact(res.data.webContact);
       
-      setFirst(false);
+
+
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        setFirst(true);
+        console.error(error.response.data.message);
       } else {
         console.error(error);
       }
@@ -56,14 +64,13 @@ console.log(user);
                   <SideBar
                     role={user?.role}
                     username={user?.username}
-                    first={first}
                   />
                   <div className="flex-1 md:ml-64 overflow-y-auto bg-gray-50 pt-16 md:pt-0">
                     <div className="p-6 md:p-8">
                       <Routes>
                         <Route
                           path="/"
-                          element={<WebContent first={first} />}
+                          element={<WebContent  />}
                         />
                         <Route
                           path="/managers"
@@ -75,15 +82,15 @@ console.log(user);
                         />
                         <Route
                           path="/projects"
-                          element={<Projects first={first} />}
+                          element={<Projects />}
                         />
                         <Route
                           path="/services"
-                          element={<Service first={first} />}
+                          element={<Service  />}
                         />
                         <Route
                           path="/contact"
-                          element={<Contact first={first} />}
+                          element={<Contact  />}
                         />
                         <Route
                           path="/*"
