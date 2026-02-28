@@ -15,25 +15,6 @@ const webContentSchema = new mongoose.Schema(
         content: String,
       },
     ],
-
-    contactSection: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "WebContact",
-    },
-
-    serviceSection: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Service",
-      },
-    ],
-
-    projectSection: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "ProjectPhoto",
-      },
-    ],
   },
   { timestamps: true },
 );

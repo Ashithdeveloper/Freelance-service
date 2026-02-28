@@ -13,7 +13,7 @@ const webData = {
     {
       heading: "Full Stack Developer",
       content:
-        "I design and develop scalable web applications, admin dashboards, and custom business solutions using the MERN stack. I help startups and businesses transform ideas into powerful digital products.",
+        "We design and develop scalable web and mobile applications, admin dashboards, and custom business solutions using the MERN stack. I help startups and businesses transform ideas into powerful digital products.",
     },
   ],
 
