@@ -1,11 +1,14 @@
 import useDataStore from "../../Zustand/datahandle";
+import ImageSlider from "./ImageSlider";
 
-const ProjectViews = () => {
-    const projects = useDataStore((state) => state.projects);
-    const deleteProject = useDataStore((state) => state.deleteProject);
+const ProjectViews = ({ selectedproject }) => {
+  const projects = useDataStore((state) => state.projects);
+  const deleteProject = useDataStore((state) => state.deleteProject);
+
   console.log("Projects", projects);
-  
-  if (!projects || projects.length === 0) {
+
+  // ✅ Safety guard
+  if (!Array.isArray(projects) || projects.length === 0) {
     return (
       <div className="text-center py-20 text-gray-500 text-lg">
         No Projects Available
@@ -21,102 +24,118 @@ const ProjectViews = () => {
         </h2>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {projects.map((project) => (
-            <div
-              key={project._id}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden flex flex-col"
-            >
-              {/* Project Image */}
-              {project.images?.length > 0 && (
-                <img
-                  src={project.images[0].url || project.images[0]}
-                  alt={project.title}
-                  className="h-52 w-full object-cover"
-                />
-              )}
+          {/* ✅ Remove undefined items */}
+          {projects
+            .filter((project) => project && project._id)
+            .map((project) => (
+              <div
+                key={project._id}
+                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden flex flex-col"
+              >
+                {/* ✅ Project Images Gallery */}
+                {/* ✅ Project Image Slider */}
+                {Array.isArray(project.images) && project.images.length > 0 && (
+                  <ImageSlider images={project.images} />
+                )}
+                {/* Content */}
+                <div className="p-6 flex flex-col flex-grow">
+                  {/* Title */}
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    {project.title || "Untitled Project"}
+                  </h3>
 
-              {/* Content */}
-              <div className="p-6 flex flex-col flex-grow">
-                {/* Title */}
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  {project.title}
-                </h3>
+                  {/* Description */}
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    {project.description || "No description available"}
+                  </p>
 
-                {/* Description */}
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                  {project.description}
-                </p>
+                  {/* Tech Stack */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {Array.isArray(project.techStack) &&
+                      project.techStack.map((tech, index) => (
+                        <span
+                          key={index}
+                          className="text-xs bg-black text-white px-3 py-1 rounded-full"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                  </div>
 
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.techStack?.map((tech, index) => (
-                    <span
-                      key={index}
-                      className="text-xs bg-black text-white px-3 py-1 rounded-full"
-                    >
-                      {tech}
+                  {/* Price + Status */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-semibold text-gray-800">
+                      ₹{project.amount || 0}
                     </span>
-                  ))}
-                </div>
 
-                {/* Price + Status */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-semibold text-gray-800">
-                    ₹{project.amount}
-                  </span>
-
-                  <span
-                    className={`text-xs px-3 py-1 rounded-full ${
-                      project.isActive
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
-                    }`}
-                  >
-                    {project.isActive ? "Active" : "Inactive"}
-                  </span>
-                </div>
-
-                {/* Buttons */}
-                <div className="mt-auto flex gap-3">
-                  {project.liveLink && (
-                    <a
-                      href={project.liveLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 text-center bg-black text-white py-2 rounded-lg text-sm hover:bg-gray-800 transition"
+                    <span
+                      className={`text-xs px-3 py-1 rounded-full ${
+                        project.isActive
+                          ? "bg-green-100 text-green-600"
+                          : "bg-red-100 text-red-600"
+                      }`}
                     >
-                      Live
-                    </a>
-                  )}
+                      {project.isActive ? "Active" : "Inactive"}
+                    </span>
+                  </div>
 
-                  {project.githubLink && (
-                    <a
-                      href={project.githubLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 text-center border border-black text-black py-2 rounded-lg text-sm hover:bg-black hover:text-white transition"
+                  {/* Buttons */}
+                  <div className="mt-auto flex gap-3">
+                    {project.liveLink && (
+                      <a
+                        href={project.liveLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 text-center bg-black text-white py-2 rounded-lg text-sm hover:bg-gray-800 transition"
+                      >
+                        Live
+                      </a>
+                    )}
+
+                    {project.githubLink && (
+                      <a
+                        href={project.githubLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 text-center border border-black text-black py-2 rounded-lg text-sm hover:bg-black hover:text-white transition"
+                      >
+                        GitHub
+                      </a>
+                    )}
+
+                    <button
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this project?",
+                          )
+                        ) {
+                          deleteProject(project._id);
+                        }
+                      }}
+                      className="flex-1 bg-red-500 text-white py-2 rounded-lg text-sm hover:bg-red-600 transition"
                     >
-                      GitHub
-                    </a>
-                  )}
-                  <button
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          "Are you sure you want to delete this project?",
-                        )
-                      ) {
-                        deleteProject(project._id);
-                      }
-                    }}
-                    className="flex-1 bg-red-500 text-white py-2 rounded-lg text-sm hover:bg-red-600 transition"
-                  >
-                    Delete
-                  </button>
+                      Delete
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to edit this project?",
+                          )
+                        ) {
+                          selectedproject(project._id);
+                        }
+                      }}
+                      className="flex-1 bg-yellow-500 text-white py-2 rounded-lg text-sm hover:bg-yellow-600 transition"
+                    >
+                      Edit
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

@@ -1,75 +1,104 @@
 import React, { useState } from "react";
-import axiosInstance from "../../axois";
+
 import { uploadToCloudinary } from "../service/imageservice";
 import ProjectViews from "../Components/projectViews";
+import { toast } from "react-toastify";
+import BeatLoader from "react-spinners/BeatLoader";
+import useDataStore from "../../Zustand/datahandle";
 
 const Projects = () => {
+  const projects = useDataStore((state) => state.projects);
+  const editProject = useDataStore((state) => state.editProject);
+  const addProject = useDataStore((state) => state.addProject);
+  
+  const [isEditingProject, setIsEditingProject] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     techStack: "",
-    images: [], // store files here
+    images: [],
     liveLink: "",
     githubLink: "",
     amount: "",
     isActive: true,
   });
-  console.log(formData.images);
+
   const [previewImages, setPreviewImages] = useState([]);
 
+  // ===============================
+  // SELECT PROJECT FOR EDIT
+  // ===============================
+  const selectedproject = (id) => {
+    setIsEditingProject(id);
+
+    const editing = projects.find((p) => p._id === id);
+    if (!editing) return;
+
+  setPreviewImages(editing.images || []);
+
+  setFormData({
+    title: editing.title,
+    description: editing.description,
+    techStack: editing.techStack.join(","),
+    images: [], // only new images here
+    liveLink: editing.liveLink,
+    githubLink: editing.githubLink,
+    amount: editing.amount,
+    isActive: editing.isActive,
+  });
+  };
+
+  // ===============================
+  // CANCEL EDIT
+  // ===============================
+  const cancel = () => {
+    setIsEditingProject("");
+    setFormData({
+      title: "",
+      description: "",
+      techStack: "",
+      images: [],
+      liveLink: "",
+      githubLink: "",
+      amount: "",
+      isActive: true,
+    });
+    setPreviewImages([]);
+  };
+
+  // ===============================
+  // HANDLE INPUT CHANGE
+  // ===============================
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
-    });
+    }));
   };
 
-  // ✅ Handle Multiple Image Upload
-const handleImageChange = (e) => {
-  const newFiles = Array.from(e.target.files);
+  // ===============================
+  // HANDLE IMAGE UPLOAD
+  // ===============================
+  const handleImageChange = (e) => {
+    const newFiles = Array.from(e.target.files);
 
-  setFormData((prev) => ({
-    ...prev,
-    images: [...prev.images, ...newFiles], // append instead of replace
-  }));
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...newFiles],
+    }));
 
-  // Add preview for new images
-  const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
+    const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
 
-  setPreviewImages((prev) => [...prev, ...newPreviews]);
-};
-const handleSubmit = async (e) => {
-  e.preventDefault();
+    setPreviewImages((prev) => [...prev, ...newPreviews]);
+  };
 
-  try {
-    // Upload all images first
-    const imageUrls = await Promise.all(
-      formData.images.map((file) =>
-        uploadToCloudinary(file),
-      ),
-    );
-
-    const dataToSend = {
-      title: formData.title,
-      description: formData.description,
-      techStack: formData.techStack.split(",").map((tech) => tech.trim()),
-      liveLink: formData.liveLink,
-      githubLink: formData.githubLink,
-      amount: formData.amount,
-      isActive: formData.isActive,
-      images: imageUrls, 
-    };
-
-    const res = await axiosInstance.post("/addProject", dataToSend);
-
-    console.log("Success:", res.data);
-  } catch (error) {
-    console.log("Upload error:", error);
-  }
-};
-
+  // ===============================
+  // REMOVE IMAGE
+  // ===============================
   const handleRemoveImage = (index) => {
     setFormData((prev) => ({
       ...prev,
@@ -79,75 +108,104 @@ const handleSubmit = async (e) => {
     setPreviewImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // ===============================
+  // HANDLE SUBMIT (CREATE / UPDATE)
+  // ===============================
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      let uploadedImages = [];
+
+      
+      if (formData.images.length > 0) {
+        uploadedImages = await Promise.all(
+          formData.images.map((file) => uploadToCloudinary(file)),
+        );
+      }
+      const finalImages = [
+        ...previewImages.filter((img) => typeof img !== "string"),
+        ...uploadedImages,
+      ];
+
+      const dataToSend = {
+        title: formData.title,
+        description: formData.description,
+        techStack: formData.techStack.split(",").map((tech) => tech.trim()),
+        liveLink: formData.liveLink,
+        githubLink: formData.githubLink,
+        amount: formData.amount,
+        isActive: formData.isActive,
+        images: finalImages,
+      };
+
+      if (isEditingProject) {
+        editProject(isEditingProject, dataToSend);
+      } else {
+        addProject(dataToSend);
+      }
+
+      cancel();
+    } catch (error) {
+      console.log("Upload error:", error);
+      toast.error("Something went wrong");
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-10">
         <h2 className="text-3xl font-bold mb-8 text-gray-800">
-          Add New Project
+          {isEditingProject ? "Edit Project" : "Add New Project"}
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Basic Info Section */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="flex flex-col">
-              <label className="text-sm font-medium mb-2 text-gray-700">
-                Project Title
-              </label>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                required
-                className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black outline-none"
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Title */}
+          <input
+            type="text"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+            placeholder="Project Title"
+            className="w-full border rounded-lg px-4 py-2"
+          />
 
-            <div className="flex flex-col">
-              <label className="text-sm font-medium mb-2 text-gray-700">
-                Project Amount (₹)
-              </label>
-              <input
-                type="number"
-                name="amount"
-                value={formData.amount}
-                onChange={handleChange}
-                className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black outline-none"
-              />
-            </div>
-          </div>
+          {/* Amount */}
+          <input
+            type="number"
+            name="amount"
+            value={formData.amount}
+            onChange={handleChange}
+            placeholder="Project Amount (₹)"
+            className="w-full border rounded-lg px-4 py-2"
+          />
 
           {/* Description */}
-          <div>
-            <label className="text-sm font-medium mb-2 text-gray-700">
-              Description
-            </label>
-            <textarea
-              name="description"
-              rows="4"
-              value={formData.description}
-              onChange={handleChange}
-              required
-              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black outline-none"
-            />
-          </div>
+          <textarea
+            name="description"
+            rows="4"
+            value={formData.description}
+            onChange={handleChange}
+            required
+            placeholder="Project Description"
+            className="w-full border rounded-lg px-4 py-2"
+          />
 
           {/* Tech Stack */}
-          <div>
-            <label className="text-sm font-medium mb-2 text-gray-700">
-              Tech Stack (comma separated)
-            </label>
-            <input
-              type="text"
-              name="techStack"
-              value={formData.techStack}
-              onChange={handleChange}
-              placeholder="React, Node.js, MongoDB"
-              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black outline-none"
-            />
-          </div>
+          <input
+            type="text"
+            name="techStack"
+            value={formData.techStack}
+            onChange={handleChange}
+            placeholder="React, Node.js, MongoDB"
+            className="w-full border rounded-lg px-4 py-2"
+          />
 
-          {/* Image Upload Section */}
+          {/* Image Upload */}
           <div>
             <label className="text-sm font-medium mb-3 text-gray-700">
               Upload Images
@@ -170,13 +228,13 @@ const handleSubmit = async (e) => {
             </div>
           </div>
 
-          {/* Preview Grid */}
+          {/* Preview */}
           {previewImages.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {previewImages.map((img, index) => (
                 <div key={index} className="relative group">
                   <img
-                    src={img}
+                    src={img?.url || img}
                     alt="preview"
                     className="w-full h-32 object-cover rounded-lg"
                   />
@@ -192,65 +250,67 @@ const handleSubmit = async (e) => {
             </div>
           )}
 
-          {/* Links Section */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="text-sm font-medium mb-2 text-gray-700">
-                Live Link
-              </label>
-              <input
-                type="text"
-                name="liveLink"
-                value={formData.liveLink}
-                onChange={handleChange}
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black outline-none"
-              />
-            </div>
+          {/* Links */}
+          <div className="grid md:grid-cols-2 gap-4">
+            <input
+              type="text"
+              name="liveLink"
+              value={formData.liveLink}
+              onChange={handleChange}
+              placeholder="Live Link"
+              className="w-full border rounded-lg px-4 py-2"
+            />
 
-            <div>
-              <label className="text-sm font-medium mb-2 text-gray-700">
-                GitHub Link
-              </label>
-              <input
-                type="text"
-                name="githubLink"
-                value={formData.githubLink}
-                onChange={handleChange}
-                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-black outline-none"
-              />
-            </div>
+            <input
+              type="text"
+              name="githubLink"
+              value={formData.githubLink}
+              onChange={handleChange}
+              placeholder="GitHub Link"
+              className="w-full border rounded-lg px-4 py-2"
+            />
           </div>
 
           {/* Active Toggle */}
-          <div className="flex items-center justify-between border-t pt-6">
-            <span className="text-sm font-medium text-gray-700">
-              Active Project
-            </span>
-
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                name="isActive"
-                checked={formData.isActive}
-                onChange={handleChange}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-black transition"></div>
-              <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition peer-checked:translate-x-5"></div>
-            </label>
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              name="isActive"
+              checked={formData.isActive}
+              onChange={handleChange}
+            />
+            <label>Active Project</label>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-black text-white py-3 rounded-xl hover:bg-gray-800 transition font-medium text-lg"
+            className="w-full bg-black text-white py-3 rounded-xl"
           >
-            Save Project
+            {loading ? (
+              <BeatLoader size={8} color="#fff" />
+            ) : isEditingProject ? (
+              "Update Project"
+            ) : (
+              "Save Project"
+            )}
           </button>
+
+          {/* Cancel */}
+          {isEditingProject && (
+            <button
+              type="button"
+              onClick={cancel}
+              className="w-full bg-red-500 text-white py-3 rounded-xl"
+            >
+              Cancel
+            </button>
+          )}
         </form>
       </div>
-      <div className="mt-4">
-        <ProjectViews/>
+
+      <div className="mt-6">
+        <ProjectViews selectedproject={selectedproject} />
       </div>
     </div>
   );

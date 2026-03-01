@@ -4,6 +4,7 @@ import WebContact from "../models/contactsection";
 import Service from "../models/serviceAvailable";
 import ProjectPhoto from "../models/projectPhoto";
 import { deleteFromCloudinary } from "../utils/cloudinaryDelete";
+import { create } from "node:domain";
 
 
 // export const createWebContent = async (req: Request, res: Response) => {
@@ -212,11 +213,11 @@ export const addProject = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       message: "Project added successfully",
-      createProject,
+      project : createProject,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({   message: "Internal Server Error" });
   }
 };
 
@@ -318,7 +319,7 @@ export const updateProject = async ( req: Request, res: Response) => {
 
     return res.status(200).json({
       message: "Project updated successfully",
-      updatedProject,
+      project :updatedProject,
     });
   } catch (error) {
     console.log(error);
