@@ -24,7 +24,7 @@ const ProjectViews = ({ selectedproject }) => {
         </h2>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {/* ✅ Remove undefined items */}
+          {/*  Remove undefined items */}
           {projects
             .filter((project) => project && project._id)
             .map((project) => (
@@ -32,8 +32,8 @@ const ProjectViews = ({ selectedproject }) => {
                 key={project._id}
                 className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden flex flex-col"
               >
-                {/* ✅ Project Images Gallery */}
-                {/* ✅ Project Image Slider */}
+            
+                {/*  Project Image Slider */}
                 {Array.isArray(project.images) && project.images.length > 0 && (
                   <ImageSlider images={project.images} />
                 )}
