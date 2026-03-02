@@ -1,141 +1,82 @@
-import { useState } from "react";
-// import webData from "../Data/webData";
-import { ExternalLink, Github, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Projects = ({ projects }) => {
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  console.log("projects", projects);
-  ;
+  const navigate = useNavigate();
 
   return (
-    <section id="projects" className="py-20 bg-gray-100">
-      <h2 className="text-4xl text-center font-bold mb-12">Sample Design</h2>
+    <section id="projects" className="py-16 sm:py-20 bg-gray-100 px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Section Title */}
+        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 sm:mb-14">
+          Featured Projects
+        </h2>
 
-      {/* Project Cards */}
-      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
-        {Array.isArray(projects) &&
-          projects.map((project) => (
-            <div
-              key={project._id}
-              onClick={() => setSelectedProject(project)}
-              className="cursor-pointer rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition duration-300"
-            >
-              <div className="relative group">
-                <img
-                  src={
-                    project.images?.[0]?.url ||
-                    "https://via.placeholder.com/400"
-                  }
-                  alt={project.title}
-                  className="h-64 w-full object-cover"
-                />
-              </div>
-            </div>
-          ))}
-      </div>
-
-      {/* Modal */}
-      {/* Modal */}
-      {selectedProject && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-          <div className="bg-white max-w-3xl w-full rounded-2xl overflow-hidden shadow-2xl relative">
-            {/* Close Button */}
-            <button
-              onClick={() => {
-                setSelectedProject(null);
-                setSelectedImageIndex(0);
-              }}
-              className="absolute top-4 right-4"
-            >
-              <X />
-            </button>
-
-            {/* Main Image */}
-            <img
-              src={
-                selectedProject.images?.[selectedImageIndex]?.url ||
-                "https://via.placeholder.com/600"
-              }
-              alt={selectedProject.title}
-              className="h-80 w-full object-cover transition-all duration-300"
-            />
-
-            {/* Thumbnails */}
-            {selectedProject.images?.length > 1 && (
-              <div className="flex gap-3 p-4 overflow-x-auto">
-                {selectedProject.images.map((img, index) => (
+        {/* Project Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {Array.isArray(projects) &&
+            projects.map((project) => (
+              <div
+                key={project._id}
+                onClick={() => navigate(`/project/${project._id}`)}
+                className="
+                  group cursor-pointer 
+                  bg-white rounded-2xl overflow-hidden 
+                  shadow-md hover:shadow-2xl 
+                  transition duration-300
+                  hover:-translate-y-2
+                "
+              >
+                {/* Image */}
+                <div className="relative overflow-hidden">
                   <img
-                    key={img._id}
-                    src={img.url}
-                    alt="thumbnail"
-                    onClick={() => setSelectedImageIndex(index)}
-                    className={`h-20 w-28 object-cover rounded-lg cursor-pointer border-2 transition ${
-                      selectedImageIndex === index
-                        ? "border-blue-500"
-                        : "border-transparent"
-                    }`}
+                    src={
+                      project.images?.[0]?.url ||
+                      "https://via.placeholder.com/400"
+                    }
+                    alt={project.title}
+                    className="
+                      w-full 
+                      h-56 sm:h-64 
+                      object-cover 
+                      transition duration-500 
+                      group-hover:scale-105
+                    "
                   />
-                ))}
-              </div>
-            )}
 
-            <div className="p-8">
-              <h3 className="text-2xl font-bold mb-4">
-                {selectedProject.title}
-              </h3>
-
-              <p className="text-gray-600 mb-4">
-                {selectedProject.description}
-              </p>
-
-              {/* Tech Stack */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {selectedProject.techStack?.map((tech, index) => (
-                  <span
-                    key={index}
-                    className="bg-gray-200 px-3 py-1 rounded-full text-sm"
+                  {/* Overlay */}
+                  <div
+                    className="
+                    absolute inset-0 
+                    bg-black/40 opacity-0 
+                    group-hover:opacity-100 
+                    transition 
+                    flex items-center justify-center
+                  "
                   >
-                    {tech}
-                  </span>
-                ))}
+                    <span className="text-white text-lg font-semibold">
+                      View Project
+                    </span>
+                  </div>
+                </div>
+
+                {/* Card Content */}
+                <div className="p-5">
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2 line-clamp-1">
+                    {project.title}
+                  </h3>
+
+                  <p className="text-gray-500 text-sm line-clamp-2 mb-3">
+                    {project.description}
+                  </p>
+
+                  <p className="text-green-600 font-semibold text-sm">
+                    ₹{project.amount}
+                  </p>
+                </div>
               </div>
-
-              {/* Price */}
-              <p className="font-semibold text-green-600 mb-6">
-                Starting from ₹{selectedProject.amount}
-              </p>
-
-              {/* Links */}
-              <div className="flex gap-6">
-                {selectedProject.liveLink && (
-                  <a
-                    href={selectedProject.liveLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 text-blue-600"
-                  >
-                    <ExternalLink size={18} />
-                    Live Demo
-                  </a>
-                )}
-
-                {selectedProject.githubLink && (
-                  <a
-                    href={selectedProject.githubLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-2 text-gray-800"
-                  >
-                    <Github size={18} />
-                    GitHub
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
+            ))}
         </div>
-      )}
+      </div>
     </section>
   );
 };

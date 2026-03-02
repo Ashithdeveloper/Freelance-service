@@ -7,35 +7,46 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import View from "./components/View";
 
 function App() {
-  const [ data , setData ] = useState(null);
+  const [data, setData] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const res = await axios.get("http://localhost:3000/api/getall");
-        console.log(res);
-        setData(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+      const res = await axios.get("http://localhost:3000/api/getall");
+      setData(res.data);
+    };
     fetchData();
-  },[])
+  }, []);
 
-  console.log(data);
   return (
-    <>
-      <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-        <Navbar />
-        <Hero />
-        <About />
-        <Services />
-        <Projects projects={data?.projects || []} />
-        <Contact />
-        <Footer />
-      </div>
-    </>
+    <Router>
+      <Routes>
+        {/* Home Page */}
+        <Route
+          path="/"
+          element={
+            <div className="min-h-screen">
+              <Navbar />
+              <Hero />
+              <About />
+              <Services />
+              <Projects projects={data?.projects || []} />
+              <Contact />
+              <Footer />
+            </div>
+          }
+        />
+
+        {/* Project View Page */}
+        <Route
+          path="/project/:id"
+          element={<View projects={data?.projects || []} />}
+        />
+      </Routes>
+    </Router>
   );
 }
 
