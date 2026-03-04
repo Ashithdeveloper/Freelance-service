@@ -204,4 +204,8 @@ const webData = {
   },
 };
 
+
+export const API = import.meta.env.VITE_API_URL;
+export const localHost = "http://localhost:3000";
+
 export default webData;

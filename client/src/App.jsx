@@ -9,13 +9,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import View from "./components/View";
+import { API } from "./Data/webData";
 
 function App() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("http://localhost:3000/api/getall");
+      const res = await axios.get(`${API}/api/getall`);
       setData(res.data);
     };
     fetchData();
