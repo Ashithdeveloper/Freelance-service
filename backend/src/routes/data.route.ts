@@ -1,5 +1,5 @@
 import express from 'express'
-import { addProject, addService, deleteProject, deleteService, getWebContent, updateContact, updateProject, updateService } from '../controller/webcontent.controller'
+import { addProject, addService, deleteProject, deleteService, getWebContent, updateContact, updateProject, updateService, webHeroSelection } from '../controller/webcontent.controller'
 import authMiddleware from '../middleware/middleware'
 
 const router = express.Router()
@@ -21,7 +21,8 @@ router.delete("/deleteProject/:id",authMiddleware , deleteProject)
 router.post("/addProject",authMiddleware ,addProject)
 //edit project
 router.put("/editProject/:id",authMiddleware ,updateProject)
-
+//web content
+router.post("/WebContent" ,authMiddleware , webHeroSelection)
 
 
 

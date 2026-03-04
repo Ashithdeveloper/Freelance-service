@@ -7,7 +7,7 @@ const useDataStore = create((set) => ({
   projects: [],
   services: [],
   webContact: null,
-  webcontent: null,
+  webcontent: [],
   setWebContact: (webContact) => set({ webContact }),
   setProjects: (projects) => set({ projects }),
   setService: (service) => set({ service }),
@@ -24,21 +24,21 @@ const useDataStore = create((set) => ({
       console.error("Delete failed:", error);
     }
   },
-  editProject :async (id , data) =>{
+  editProject: async (id, data) => {
     try {
-      const res = await axiosInstance.put(`/editProject/${id}` , data);
+      const res = await axiosInstance.put(`/editProject/${id}`, data);
       console.log("res", res.data);
-       set((state) => ({
-         projects: state.projects.map((p) =>
-           p._id === id ? res.data.project : p,
-         ),
-       }));
-       toast.success("Project updated successfully");
+      set((state) => ({
+        projects: state.projects.map((p) =>
+          p._id === id ? res.data.project : p,
+        ),
+      }));
+      toast.success("Project updated successfully");
     } catch (error) {
       console.log(error);
     }
   },
-  addProject : async (data) => {
+  addProject: async (data) => {
     try {
       const res = await axiosInstance.post("/addProject", data);
       console.log("res", res.data);
@@ -49,7 +49,19 @@ const useDataStore = create((set) => ({
     } catch (error) {
       console.log(error);
     }
-  }
+  },
+  addWebContent: async (data) => {
+    try {
+      const res = await axiosInstance.post("/WebContent", data);
+      console.log("res", res.data);
+      set((state) => ({
+        webcontent: [...state.webcontent, res.data.webContent],
+      }));
+     
+    } catch (error) {
+      console.log(error);
+    }
+  },
 }));
 
 export default useDataStore

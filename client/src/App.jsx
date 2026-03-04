@@ -41,7 +41,7 @@ function App() {
           }
         />
 
-        {/* Project View Page */}
+        
         <Route
           path="/project/:id"
           element={<View projects={data?.projects || []} />}
