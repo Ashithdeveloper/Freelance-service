@@ -41,15 +41,14 @@ const View = ({ projects }) => {
                     "https://via.placeholder.com/800"
                   }
                   alt={project.title}
-                  className="
-        w-full
-        h-[280px]
-        sm:h-[380px]
-        md:h-[450px]
-        lg:h-[500px]
-        object-contain
-        transition-all duration-300
-      "
+                  className="  w-full
+                              h-[280px]
+                              sm:h-[380px]
+                              md:h-[450px]
+                              lg:h-[500px]
+                              object-contain
+                              transition-all duration-300
+                            "
                 />
               </div>
             </div>
@@ -62,22 +61,22 @@ const View = ({ projects }) => {
                   src={img.url}
                   onClick={() => setSelectedImageIndex(index)}
                   className={`
-        h-16 w-24
-        sm:h-20 sm:w-28
-        md:h-24 md:w-32
-        object-cover
-        rounded-xl
-        cursor-pointer
-        border-2
-        shadow-sm
-        transition-all duration-200
-        hover:scale-105
-        ${
-          selectedImageIndex === index
-            ? "border-blue-600 ring-2 ring-blue-200"
-            : "border-gray-200"
-        }
-      `}
+                    h-16 w-24
+                    sm:h-20 sm:w-28
+                    md:h-24 md:w-32
+                    object-cover
+                    rounded-xl
+                    cursor-pointer
+                    border-2
+                    shadow-sm
+                    transition-all duration-200
+                    hover:scale-105
+                    ${
+                   selectedImageIndex === index
+                  ? "border-blue-600 ring-2 ring-blue-200"
+                  : "border-gray-200"
+                }
+             `}
                 />
               ))}
             </div>
