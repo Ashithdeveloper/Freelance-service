@@ -33,49 +33,54 @@ const View = ({ projects }) => {
           {/* LEFT: IMAGE GALLERY */}
           <div>
             {/* Main Image */}
-            <div className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg">
-              <img
-                src={
-                  project.images?.[selectedImageIndex]?.url ||
-                  "https://via.placeholder.com/800"
-                }
-                alt={project.title}
-                className="
-                  w-full 
-                  h-[280px] 
-                  sm:h-[380px] 
-                  md:h-[450px] 
-                  lg:h-[500px] 
-                  object-cover 
-                  transition-all duration-300
-                "
-              />
+            <div className="rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg bg-white p-3 sm:p-4">
+              <div className="flex items-center justify-center bg-gray-100 rounded-xl">
+                <img
+                  src={
+                    project.images?.[selectedImageIndex]?.url ||
+                    "https://via.placeholder.com/800"
+                  }
+                  alt={project.title}
+                  className="
+        w-full
+        h-[280px]
+        sm:h-[380px]
+        md:h-[450px]
+        lg:h-[500px]
+        object-contain
+        transition-all duration-300
+      "
+                />
+              </div>
             </div>
 
             {/* Thumbnails */}
-            {project.images?.length > 1 && (
-              <div className="flex gap-3 sm:gap-4 mt-4 sm:mt-6 overflow-x-auto pb-2">
-                {project.images.map((img, index) => (
-                  <img
-                    key={img._id}
-                    src={img.url}
-                    onClick={() => setSelectedImageIndex(index)}
-                    className={`
-                      h-16 w-24
-                      sm:h-20 sm:w-28
-                      md:h-24 md:w-32
-                      object-cover rounded-lg sm:rounded-xl
-                      cursor-pointer border-2 transition
-                      ${
-                        selectedImageIndex === index
-                          ? "border-blue-600"
-                          : "border-transparent hover:border-gray-300"
-                      }
-                    `}
-                  />
-                ))}
-              </div>
-            )}
+            <div className="flex gap-3 sm:gap-4 mt-4 sm:mt-6 overflow-x-auto pb-2">
+              {project.images.map((img, index) => (
+                <img
+                  key={img._id}
+                  src={img.url}
+                  onClick={() => setSelectedImageIndex(index)}
+                  className={`
+        h-16 w-24
+        sm:h-20 sm:w-28
+        md:h-24 md:w-32
+        object-cover
+        rounded-xl
+        cursor-pointer
+        border-2
+        shadow-sm
+        transition-all duration-200
+        hover:scale-105
+        ${
+          selectedImageIndex === index
+            ? "border-blue-600 ring-2 ring-blue-200"
+            : "border-gray-200"
+        }
+      `}
+                />
+              ))}
+            </div>
           </div>
 
           {/* RIGHT: PROJECT DETAILS */}
