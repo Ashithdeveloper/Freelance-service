@@ -1,34 +1,49 @@
-import webData from "../Data/webData";
+import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 
+const Hero = ({ hero }) => {
+  const images =
+    hero?.images?.length > 0
+      ? hero.images.map((img) => img.url)
+      : ["https://images.unsplash.com/photo-1492724441997-5dc865305da7"];
 
-const Hero = () => {
-  const hero = webData?.heroSection?.[0];
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Fallback image (important)
-  const bgImage =
-    hero?.image ||
-    "https://images.unsplash.com/photo-1492724441997-5dc865305da7";
+  // Auto slide effect
+  useEffect(() => {
+    if (images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   return (
     <section
       id="hero"
       className="relative h-screen flex items-center justify-center text-white overflow-hidden"
     >
-      {/* Background Image */}
-      <img
-        src={bgImage}
-        alt="Hero Background"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
+      {/* Background Images */}
+      {images.map((img, index) => (
+        <img
+          key={index}
+          src={img}
+          alt="Hero Background"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+            index === currentIndex ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      ))}
 
-      {/* Dark Gradient Overlay */}
+      {/* Dark Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80"></div>
 
       {/* Content */}
       <div className="relative z-10 max-w-4xl text-center px-6">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-6">
-          {hero?.content || "I Build Modern Web Applications"}
+          {hero?.title || "I Build Modern Web Applications"}
         </h1>
 
         <p className="text-gray-300 text-lg md:text-xl mb-8">

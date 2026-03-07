@@ -22,6 +22,8 @@ function App() {
     fetchData();
   }, []);
 
+ 
+
   return (
     <Router>
       <Routes>
@@ -31,7 +33,7 @@ function App() {
           element={
             <div className="min-h-screen">
               <Navbar />
-              <Hero />
+              <Hero hero={data?.webContent.heroSection} />
               <About />
               <Services />
               <Projects projects={data?.projects || []} />
