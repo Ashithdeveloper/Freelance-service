@@ -41,8 +41,8 @@ const Hero = ({ hero }) => {
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80"></div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-4xl text-center px-6">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+      <div className="relative z-10 max-w-4xl text-center px-6 md:mt-50">
+        <h1 className="text-4xl sm:text-5xl md:text-5xl font-extrabold leading-tight mb-6">
           {hero?.title || "I Build Modern Web Applications"}
         </h1>
 
