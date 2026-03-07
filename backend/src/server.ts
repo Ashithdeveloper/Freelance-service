@@ -13,10 +13,13 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-job.start();
+
 
 app.use("/api", userRoute);
 app.use("/api", webDataRoute);
+
+job.start();
+
 
 const PORT = process.env.PORT || 3000
 

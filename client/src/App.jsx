@@ -17,6 +17,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       const res = await axios.get(`${API}/api/getall`);
+      console.log(res.data);
       setData(res.data);
     };
     fetchData();

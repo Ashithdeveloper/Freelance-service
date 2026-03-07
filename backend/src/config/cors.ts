@@ -6,6 +6,7 @@ dotenv.config();
 
 const job = new CronJob("*/14 * * * *", function () {
   const url = process.env.API_URL;
+  console.log("API_URL", url);
 
   if (!url) {
     console.error("API_URL is not defined in env");
