@@ -279,13 +279,16 @@ export const webHeroSelection = async (req: Request, res: Response) => {
   try {
     const { title, aboutTitle, aboutDescription, images } = req.body;
 
-    console.log("BODY:", req.body);
+  
 
     if (!title || !aboutTitle || !aboutDescription) {
       return res.status(400).json({
-        message: "All fields are required",
+        message: "All fields are required", 
+        
       });
     }
+   
+
 
     let webContent = await WebContent.findOne({});
 

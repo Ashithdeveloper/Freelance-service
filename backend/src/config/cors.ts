@@ -10,6 +10,7 @@ const job = new CronJob("*/14 * * * *", function () {
   if (!url) {
     console.error("API_URL is not defined in env");
     return;
+    
   }
 
   https
