@@ -4,27 +4,27 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const job = new CronJob("*/14 * * * *", function () {
-  const url = process.env.API_URL;
-  console.log("API_URL", url);
+// The 4th parameter 'true' tells the job to start immediately
+const job = new CronJob(
+  "*/14 * * * *",
+  function () {
+    const url = process.env.API_URL;
 
-  if (!url) {
-    console.error("API_URL is not defined in env");
-    return;
-    
-  }
+    if (!url) {
+      console.error("API_URL is not defined in env");
+      return;
+    }
 
-  https
-    .get(url, (res) => {
-      if (res.statusCode === 200) {
-        console.log("GET request sent successfully");
-      } else {
-        console.log("GET request failed", res.statusCode);
-      }
-    })
-    .on("error", (err) => {
-      console.error("Error while sending request", err);
-    });
-});
+    https
+      .get(url, (res) => {
+        console.log(`Request to ${url} status: ${res.statusCode}`);
+      })
+      .on("error", (err) => {
+        console.error("Error while sending request", err);
+      });
+  },
+  null, // onComplete
+  true, // Start the job right now!
+);
 
 export default job;
