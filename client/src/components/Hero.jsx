@@ -15,6 +15,7 @@ const Hero = ({ hero }) => {
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+      
     }, 3000);
 
     return () => clearInterval(interval);
