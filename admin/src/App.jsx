@@ -1,5 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import "./App.css";
+import { Route, Routes } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import SideBar from "./pages/SideBar";
 import ProtectedRoute from "./ProtectedRoute";
@@ -9,69 +8,64 @@ import Projects from "./pages/Projects";
 import Service from "./pages/Service";
 import Contact from "./pages/Contact";
 import WebContent from "./pages/WebContent";
-import { useEffect} from "react";
+import Inquiries from "./pages/Inquiries";
+import { useEffect } from "react";
 import axiosInstance from "../axois";
 import useDataStore from "../Zustand/datahandle";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  
-const { user } = useAuthStore((state) => state);
-const { setProjects, setService, setWebcontent, setWebContact } = useDataStore();
+  const { user } = useAuthStore((state) => state);
+  const { setProjects, setService, setWebcontent, setWebContact, fetchInquiries } = useDataStore();
 
-
-
-useEffect(() => {
-  const getall = async () => {
-    try {
-     const res = await axiosInstance.get("/getall");
-     console.log("res", res.data);
-     console.log("Setting projects:", res.data.projects);
-      setProjects(res.data.projects);
-      setService(res.data.services);
-      setWebcontent(res.data.webContent);
-      setWebContact(res.data.webContact);
-      
-
-
-    } catch (error) {
-      if (error.response && error.response.status === 400) {
-        console.error(error.response.data.message);
-      } else {
-        console.error(error);
+  useEffect(() => {
+    const getall = async () => {
+      try {
+        const res = await axiosInstance.get("/getall");
+        if (res.data) {
+          setProjects(res.data.projects || []);
+          setService(res.data.services || []);
+          setWebcontent(res.data.webContent || null);
+          setWebContact(res.data.webContact || null);
+        }
+      } catch (error) {
+        console.warn("Could not fetch data from backend:", error?.message);
       }
+    };
+
+    getall();
+
+    if (user) {
+      fetchInquiries();
     }
-  };
+  }, [user]);
 
-  getall();
-}, []);
-
-
-
-
-console.log(user);
   return (
-    <>
-      {!user && <Login />}
-      {user && (
+    <div className="min-h-screen bg-slate-950 text-gray-100 selection:bg-blue-600 selection:text-white">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="dark"
+        toastClassName="bg-slate-900 border border-white/10 text-white"
+      />
+
+      {!user ? (
+        <Login />
+      ) : (
         <Routes>
-          {/* Protected Layout */}
           <Route
             path="/*"
             element={
               <ProtectedRoute>
-                <div className="flex h-screen overflow-hidden">
-                  <SideBar
-                    role={user?.role}
-                    username={user?.username}
-                  />
-                  <div className="flex-1 md:ml-64 overflow-y-auto bg-gray-50 pt-16 md:pt-0">
-                    <div className="p-6 md:p-8">
+                <div className="flex h-screen overflow-hidden bg-slate-950">
+                  <SideBar role={user?.role} username={user?.username} />
+
+                  <div className="flex-1 md:ml-64 overflow-y-auto bg-slate-950 pt-16 md:pt-0 cyber-grid">
+                    <div className="p-6 md:p-10 max-w-7xl mx-auto">
                       <Routes>
-                        <Route
-                          path="/"
-                          element={<WebContent  />}
-                        />
+                        <Route path="/" element={<WebContent />} />
+                        <Route path="/inquiries" element={<Inquiries />} />
                         <Route
                           path="/managers"
                           element={
@@ -80,21 +74,21 @@ console.log(user);
                             </ProtectedRoute>
                           }
                         />
-                        <Route
-                          path="/projects"
-                          element={<Projects />}
-                        />
-                        <Route
-                          path="/services"
-                          element={<Service  />}
-                        />
-                        <Route
-                          path="/contact"
-                          element={<Contact  />}
-                        />
+                        <Route path="/projects" element={<Projects />} />
+                        <Route path="/services" element={<Service />} />
+                        <Route path="/contact" element={<Contact />} />
                         <Route
                           path="/*"
-                          element={<div className="text-4xl">404</div>}
+                          element={
+                            <div className="h-[70vh] flex flex-col items-center justify-center text-center">
+                              <h2 className="text-6xl font-black text-blue-500 mb-2">
+                                404
+                              </h2>
+                              <p className="text-gray-400 text-sm">
+                                The requested admin panel page does not exist.
+                              </p>
+                            </div>
+                          }
                         />
                       </Routes>
                     </div>
@@ -105,7 +99,7 @@ console.log(user);
           />
         </Routes>
       )}
-    </>
+    </div>
   );
 }
 
