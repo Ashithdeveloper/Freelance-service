@@ -23,10 +23,12 @@ const Hero = ({ hero, onOpenEstimator }) => {
 
     const timeout = setTimeout(() => {
       if (!isDeleting) {
+
         setDisplayedText(currentRole.substring(0, displayedText.length + 1));
         if (displayedText === currentRole) {
           setTimeout(() => setIsDeleting(true), 1800);
         }
+        
       } else {
         setDisplayedText(currentRole.substring(0, displayedText.length - 1));
         if (displayedText === "") {

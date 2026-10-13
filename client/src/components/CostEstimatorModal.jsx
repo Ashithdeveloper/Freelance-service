@@ -15,8 +15,9 @@ import confetti from "canvas-confetti";
 import axios from "axios";
 import { API } from "../Data/webData";
 
+
 const PROJECT_TYPES = [
-  { id: "webapp", name: "Custom Web Application", basePrice: 25000, baseDays: 14 },
+  { id: "webapp", name: "Custom Web Application..", basePrice: 25000, baseDays: 14 },
   { id: "ecommerce", name: "E-Commerce Store & Admin", basePrice: 30000, baseDays: 18 },
   { id: "saas", name: "SaaS / Subscription Platform", basePrice: 35000, baseDays: 21 },
   { id: "mobile", name: "Mobile App (React Native)", basePrice: 30000, baseDays: 16 },
