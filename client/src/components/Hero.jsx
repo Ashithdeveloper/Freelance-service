@@ -82,7 +82,7 @@ const Hero = ({ hero, onOpenEstimator }) => {
 
         <p className="max-w-2xl text-gray-400 text-sm sm:text-base md:text-lg mb-8 leading-relaxed">
           Transforming complex business requirements into sleek, lightning-fast
-          applications with robust architecture, modern 3D UI, and seamless user experiences.
+          applications with robust architecture, modern 3D UI, and seamless user experiences....
         </p>
 
         {/* Interactive CTA Buttons */}
